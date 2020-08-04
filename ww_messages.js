@@ -2,6 +2,7 @@ module.exports = { addMessages };
 const { directMention } = require('@slack/bolt');
 const queries = require('./ww_queries');
 const helpers = require('./ww_helpers');
+const { t } = require('localizify');
 
 let client;
 let botUserId;
@@ -18,14 +19,33 @@ async function addMessages(app) {
   app.message(/.*/, registerMessage);
 }
 
+//async function appMention({ message, say }) {
+//  await client.chat.postEphemeral({
+//    token: process.env.SLACK_BOT_TOKEN,
+//    channel: message.channel,
+//    user: message.user,
+//    text: `Hey stop met me @-mentionen, ik heb geen idee wat ik daar mee aan moet...`
+//  });
+//}
+
 async function appMention({ message, say }) {
-  await client.chat.postEphemeral({
+  await client.chat.postMessage({
     token: process.env.SLACK_BOT_TOKEN,
     channel: message.channel,
-    user: message.user,
-    text: `Hey stop met me @-mentionen, ik heb geen idee wat ik daar mee aan moet...`
+	blocks: [
+		{
+			"type": "image",
+			"title": {
+				"type": "plain_text",
+				"text": "Did somebody call me?"
+			},
+			"image_url": "https://media2.giphy.com/media/dCpsXSN2tJMfS/giphy.gif?cid=6104955e3ee7853b4b61e85b329028d4eeb39d4ed2de1ac3&rid=giphy.gif",
+			"alt_text": "Howling wolf."
+		}
+	]
   });
 }
+
 
 async function startStemming({ message, say }) {
   if (message.type !== 'message' || message.user !== 'USLACKBOT') {
@@ -112,7 +132,7 @@ async function stopStemming({ message, say }) {
       ]
     });
     const mayorId = channelUsersAlive
-      .filter(x => x.status === 'Burgemeester')
+      .filter(x => x.status === t('TEXTMAYOR'))
       .map(y => y.id)
       .join();
     for (const playerAlive of channelUsersAlive) {
