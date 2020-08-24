@@ -622,6 +622,10 @@ async function stopSpel({ command, ack, say }) {
     const result = await queries.stopGame();
     if (result.succes) {
       await helpers.sendIM(client, command.user_id, `${t('TEXTGAMECLOSED')}`);
+      // post messageCountResults
+      const messageCountRows = await queries.messageCountForGame();
+      say(helpers.postMessageCount(messageCountRows, `${t('TEXTMESSAGECOUNT')}`));
+
     } else {
       await helpers.sendIM(client, command.user_id, result.error);
     }

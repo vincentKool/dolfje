@@ -123,5 +123,6 @@
   "TEXTROLES": "The roles",
   "HELPTEXT": "Dolfje is gemaakt door foaly en met testhulp van Thijs, deWhiskyNerd, Ferry en Gerine. Van de mnot weerwolven Slack.\nEr draait op https://mnot.nl/weerwolvenslack vrijwel altijd een spel, speel gerust eens mee!\nMocht je tijdens het spel vragen hebben over de regels of de tactiek mag je altijd een privékanaal starten dolfje uit te nodigen (/invite @dolfje) en de vertellers daar in uitnodigen (/wwnodigvertellersuit)\nLet op! De vertellers zullen geen geheime informatie met je delen en er is niet iets als 'de beste tactiek' dus neem het mee, maar blijf je eigen spel spelen!\nKrijg je een foutmelding of heb je een vraag, suggestie of tip over Dolfje stuur dan foaly een DM zodat hij er naar kan kijken.\nEen korte handleiding van Dolfje kan je vinden op: https://1drv.ms/w/s!AjgzSBmd1PZUhcxdH5OCI-CUCAPDDg?e=qgeq05  Veel succes met het spel en vergeet niet; het feit dat je paranoïde bent, betekent niet dat je niet wordt achtervolgd.\nZoals het Russische gezegde gaat: Doveryáy, no proveryáy\nfoaly",
   "TEXTIFIVOTE": "If I have to vote on someone, I would vote on",
-  "TEXTREMARK": "look out, this is a complete random name"
+  "TEXTREMARK": "look out, this is a complete random name",
+  "TEXTMESSAGECOUNT": "During the game Dolfje counted all the messages in the channels it had access to. Below are the results."
 }

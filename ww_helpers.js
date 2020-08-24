@@ -1,4 +1,4 @@
-module.exports = { getUserlist, getUserName, sendIM, shuffle, postDelayed, addSlackName };
+module.exports = { getUserlist, getUserName, sendIM, shuffle, postDelayed, addSlackName, postMessageCount };
 
 async function getUserlist(client, channelId) {
   const channelUsersList = [];
@@ -119,4 +119,51 @@ function postNotVoted(client, channel, postArray) {
       ]
     });
   }
+}
+
+function postMessageCount(rows, text) {
+  let blocks = [];
+  blocks.push(
+    {
+      "type": "section",
+      "text": {
+				"type": "mrkdwn",
+				"text": `${text}`
+      }
+    });
+
+    blocks.push(
+      {
+        "type": "section",
+        "fields": [
+          {
+            "type": "mrkdwn",
+            "text": "*Player*"
+          },
+          {
+            "type": "mrkdwn",
+            "text": "*Nr. of Messages*"
+          }
+        ]
+      }
+    )
+
+  for(row of rows){
+    blocks.push(
+      {
+        "type": "section",
+        "fields": [
+          {
+            "type": "mrkdwn",
+            "text": `<@${row.gpl_slack_id}>`
+          },
+          {
+            "type": "mrkdwn",
+            "text": `${row.gpl_number_of_messages}`
+          }
+        ]
+      }
+    )
+  }
+  return {"blocks": blocks};
 }

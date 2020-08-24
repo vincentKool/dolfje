@@ -31,6 +31,7 @@ module.exports = {
   getChannel,
   getAllChannels,
   messageCountPlusPlus,
+  messageCountForGame,
 };
 
 const pool = mysql.createPool({
@@ -701,3 +702,15 @@ async function getAllChannels(gameId) {
   const [rows] = await promisePool.query(`select gch_slack_id from game_channels where gch_gms_id = ?`, [gameId]);
   return rows;
 }
+
+  async function messageCountForGame() {
+    const [rows] = await promisePool.query(
+      `SELECT gpl_name, gpl_slack_id, gpl_number_of_messages 
+        FROM game_players 
+        WHERE gpl_gms_id = 
+          (select max(gms_id) FROM games WHERE gms_status = ?) 
+        ORDER BY gpl_number_of_messages DESC`,
+      [gameStates.ended]
+    )
+    return rows;
+  }
