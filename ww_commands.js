@@ -745,29 +745,34 @@ async function extraVerteller({ command, ack, say }) {
   ack();
   try {
     const params = command.text.trim().split(' ');
+    // Check if the command is given by a moderator
     if (!(await queries.isVerteller(command.user_id))) {
       const warning = `${t('TEXTONLYMODSCANMAKEMODS')}`;
       await helpers.sendIM(client, command.user_id, warning);
       return;
     }
+    // Check if a parameter is given
     if (params.length !== 1) {
       const warning = `${t('COMMANDEXTRAMODERATOR')} ${t('TEXTONEPARAMETER')} [@${t('TEXTUSER')}]`;
       await helpers.sendIM(client, command.user_id, warning);
       return;
     }
+    // Check if parameter is a user
+    if (/^<(@[A-Z0-9]*)(\|.*)?>/.test(params[0]) === false) {
+      const warning = `${t('TEXTFIRSTPARAMETERSHOULD')} ${t('COMMANDEXTRAMODERATOR')} ${t('TEXTSHOULDBEA')}`;
+      await helpers.sendIM(client, command.user_id, warning);
+      return;
+    }
     const state = await queries.getGameState();
     const userId = params[0].match(/^<@([A-Z0-9]*)(\|.*)?>/)[1];
+
     const alivePlayers = await queries.getAlive();
     if (alivePlayers.some((x) => x.user_id === userId)) {
       const warning = `${command.text} ${t('TEXTISPLAYER')}`;
       await helpers.sendIM(client, command.user_id, warning);
       return;
     }
-    if (/^<(@[A-Z0-9]*)(\|.*)?>/.test(params[0]) === false) {
-      const warning = `${t('TEXTFIRSTPARAMETERSHOULD')} ${t('COMMANDEXTRAMODERATOR')} ${t('TEXTSHOULDBEA')}`;
-      await helpers.sendIM(client, command.user_id, warning);
-      return;
-    }
+
     const userName = await helpers.getUserName(client, userId);
     await queries.addVerteller(userId, userName);
     if (state[0].gms_status === 'STARTED') {
@@ -975,9 +980,12 @@ async function ikKijkMee({ command, ack, say }) {
 
 async function ikDoeNietMeerMee({ command, ack, say }) {
   ack();
+  params = command.text.trim().split(' ');
+  const besure = (params[0] === 'ikweethetzeker') ? true : false;
+
   try {
     const userName = await helpers.getUserName(client, command.user_id);
-    const result = await queries.leaveGame(command.user_id);
+    const result = await queries.leaveGame(command.user_id, besure);
     if (result.succes) {
       say({
         blocks: [

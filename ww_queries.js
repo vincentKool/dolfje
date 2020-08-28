@@ -260,14 +260,25 @@ async function viewGame(userId, userName, gameId) {
   }
 }
 
-async function leaveGame(userId) {
+async function leaveGame(userId, besure = false) {
   try {
     const game = await getGame(gameStates.registering);
     const gameHasPlayer = await getGameHasPlayer(game.gms_id, userId);
     const gameHasViewer = await getGameHasViewer(game.gms_id, userId);
-    if (!gameHasPlayer && !gameHasViewer) {
+    const userIsVerteller = await isVerteller(userId);
+    if (!gameHasPlayer && !gameHasViewer && !userIsVerteller) {
       return { succes: false, error: 'je bent niet ingeschreven' };
     }
+    if(userIsVerteller){
+      if(!besure) {
+        return { succes: false, error: 'je bent een verteller, geef "ikweethetzeker" als parameter als je echt het spel wilt verlaten' };
+      }
+      const vertellers = await getVertellers();
+      if (vertellers.length == 1) {
+        return { succes: false, error: 'je bent de enige verteller wijs eerst een andere verteller aan' };
+      }
+    }
+
     await promisePool.query(
       `delete from game_players
        where gpl_gms_id = ?
@@ -486,7 +497,8 @@ async function getEveryOne() {
 }
 
 async function getAlive() {
-  const game = await getGame(gameStates.started);
+  //const game = await getGame(gameStates.started);
+const game = await getActiveGame();
   const [rows] = await promisePool.query(
     `select gpl_slack_id user_id
          , gpl_name name
